@@ -13,11 +13,12 @@ class App extends Component {
     super(props);
     this.ws = null;
     this.state = {
-      newMsg: '', // Holds new messages to be sent to the server
+      newMsg: '', // Holds new messages to be sent to the server  
       chatContent: '', // A running list of chat messages displayed on the screen
       email: '', // Email address used for grabbing avatar
       username: '', // Our username
       joined: false, // True if email and username have been filled in
+      userContent: '',
     }
   }
 
@@ -26,18 +27,42 @@ class App extends Component {
     this.ws.addEventListener('message', e => {
       let msg = JSON.parse(e.data);
       this.setState(prevState => {
-        return {
-          chatContent: prevState.chatContent + `
+        if(msg.username!=this.state.username){
+          return {
+            chatContent: prevState.chatContent + `
+              <div class="chip">
+                <img src="${this.gravatarURL(msg.email)}">
+                ${msg.username}
+              </div>
+              ${emojione.toImage(msg.message)} <br/>
+            `,
+            userContent: prevState.userContent + `
             <div class="chip">
               <img src="${this.gravatarURL(msg.email)}">
-              ${msg.username}
+              <a>${msg.username}</a>
             </div>
-            ${emojione.toImage(msg.message)} <br/>
+            <br/>
           `,
+          }
+        }else{
+          return {
+            chatContent: prevState.chatContent + `
+              <div class="chip">
+                <img src="${this.gravatarURL(msg.email)}">
+                ${msg.username}
+              </div>
+              ${emojione.toImage(msg.message)} <br/>
+            `,
+            
+          }
         }
+        
       });
+        
       const el = document.getElementById('chat-messages')
+      // const el2 = document.getElementById('user-list')
       el.scrollTop = el.scrollHeight; // auto scroll to bottom
+      // el2.scrollTop = el2.scrollHeight; // auto scroll to bottom
     })
   }
 
@@ -68,6 +93,13 @@ class App extends Component {
     }
     this.setState(prevState => {
       return {
+        // userContent: prevState.userContent + `
+        //     <div class="chip">
+        //       <img src="${this.gravatarURL(this.state.email)}">
+        //       <a>${this.state.username}</a>
+        //     </div>
+        //     <br/>
+        //   `,
         email: $('<p>').html(prevState.email).text(),
         username: $('<p>').html(prevState.username).text(),
         joined: true,
@@ -118,14 +150,19 @@ class App extends Component {
         <header>
           <nav className="nav-wrapper">
             <a href="/" className="brand-logo right">
-              Super Rad Chat App
+              Web Socket
+            </a>
+            <a href="/" className="brand-logo left">
+              Hello {this.state.username}
             </a>
           </nav>
         </header>
         <main id="app">
           <ChatContent 
-            html={this.state.chatContent}
-          />
+              chatContent={this.state.chatContent}
+              userContent={this.state.userContent}
+            />
+          
           {userInput}
         </main>
         <footer className="page-footer">

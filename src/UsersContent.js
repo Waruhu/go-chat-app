@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class ChatContent extends Component {
+class UsersContent extends Component {
   createMarkup(markupString) {
     return {
       __html: markupString,
@@ -9,22 +9,20 @@ class ChatContent extends Component {
 
   render() {
     return (
-      <div className="row">
-        <div className="col s2">
-        <h5>User List</h5>
+        <div className="row">
+        <div className="col s6">
           <div className="card horizontal">
             <div id="chat-messages" 
                  className="card-content" 
-                 dangerouslySetInnerHTML={this.createMarkup(this.props.userContent)}>
+                 dangerouslySetInnerHTML={this.createMarkup(this.props.html)}>
             </div>
           </div>
       </div>
-      <div className="col s10">
-      <h5>Room</h5>
+      <div className="col s6">
           <div className="card horizontal">
             <div id="chat-messages" 
                  className="card-content" 
-                 dangerouslySetInnerHTML={this.createMarkup(this.props.chatContent)}>
+                 dangerouslySetInnerHTML={this.createMarkup(this.props.html)}>
             </div>
           </div>
       </div>
@@ -33,4 +31,4 @@ class ChatContent extends Component {
   }
 }
 
-export default ChatContent; 
+export default UsersContent; 

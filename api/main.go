@@ -3,13 +3,17 @@ package main
 import (
 	"log"
 	"net/http"
-
+	// "fmt"
 	"github.com/gorilla/websocket"
+	// "github.com/novalagung/gubrak"
+	// "strings"
 )
 
 // Oh dear. Globals...
 var clients = make(map[*websocket.Conn]bool)
 var broadcast = make(chan Message)
+var broadcastUser = make(chan string)
+
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
@@ -46,6 +50,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		broadcast <- msg
 	}
 }
+
 
 func handleMessages() {
 	for {
